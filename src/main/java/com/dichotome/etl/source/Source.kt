@@ -1,8 +1,10 @@
 package com.dichotome.etl.source
 
+import java.nio.file.Paths
+
 sealed class Source {
-    companion object{
-        const val ROOT_PATH = "C:\\Users\\Pavlo\\Desktop\\SQL"
+    companion object {
+        val ROOT_PATH = "${Paths.get("").toAbsolutePath()}\\src\\main\\resources\\csv"
     }
 
     abstract val path: String
