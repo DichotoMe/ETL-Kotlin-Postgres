@@ -55,4 +55,15 @@ sealed class Source {
             const val humansdeaths = "humansdeaths"
         }
     }
+
+    object DiseaseInfo : Source() {
+        override val path = "$ROOT_PATH\\disease_info.csv"
+
+        object Schema {
+            const val name = "name"
+            const val type = "type"
+            const val target = "target"
+            const val infects_humans = "infects_humans"
+        }
+    }
 }

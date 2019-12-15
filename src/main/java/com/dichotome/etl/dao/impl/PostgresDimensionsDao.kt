@@ -14,8 +14,8 @@ class PostgresDimensionsDao : DimensionsDao {
 
     companion object {
         private const val INSERT_INTO_LOCATION_DIM = "insert into location_dim " +
-            "(latitude, longitude, region, country, localityName) " +
-            "values (?, ?, ?, ?, ?)"
+            "(latitude, longitude, continent, country, country_region, locality_name) " +
+            "values (?, ?, ?, ?, ?, ?)"
 
         private const val INSERT_INTO_OBSERVATION_DATE_DIM = "insert into observation_date_dim(date) values (?)"
 
@@ -23,7 +23,9 @@ class PostgresDimensionsDao : DimensionsDao {
 
         private const val INSERT_INTO_STATUS_DIM = "insert into status_dim(status) values (?)"
 
-        private const val INSERT_INTO_DISEASE_DIM = "insert into disease_dim(disease) values (?)"
+        private const val INSERT_INTO_DISEASE_DIM = "insert into disease_dim" +
+            "(disease, type, target, infects_humans) " +
+            "values (?,?,?,?)"
 
         private const val INSERT_INTO_SEROTYPE_DIM = "insert into serotype_dim(serotype) values (?)"
 
@@ -67,9 +69,10 @@ class PostgresDimensionsDao : DimensionsDao {
                 ).use {
                     it.setDouble(1, locationDim.latitude)
                     it.setDouble(2, locationDim.longitude)
-                    it.setString(3, locationDim.region)
+                    it.setString(3, locationDim.continent)
                     it.setString(4, locationDim.country)
-                    it.setString(5, locationDim.localityName)
+                    it.setString(5, locationDim.countryRegion)
+                    it.setString(6, locationDim.localityName)
 
                     it.executeUpdate()
 
@@ -178,6 +181,9 @@ class PostgresDimensionsDao : DimensionsDao {
                     Statement.RETURN_GENERATED_KEYS
                 ).use {
                     it.setString(1, diseaseDim.disease)
+                    it.setString(2, diseaseDim.type)
+                    it.setString(3, diseaseDim.target)
+                    it.setString(4, diseaseDim.infectsHumans)
 
                     it.executeUpdate()
 

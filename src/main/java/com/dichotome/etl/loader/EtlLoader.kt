@@ -34,7 +34,8 @@ object EtlLoader {
                 DataParser.parse(
                     Source.DiseasesCases,
                     Source.AnimalsInfo,
-                    Source.HumanVictimsInfo
+                    Source.HumanVictimsInfo,
+                    Source.DiseaseInfo
                 )
             )
 
@@ -42,14 +43,14 @@ object EtlLoader {
 
             measureTimeMillis {
                 runBlocking {
-                    locationDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createLocationDim(it) }
-                    observationDateDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createObservationDateDim(it) }
-                    reportingDateDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createReportingDateDim(it) }
-                    statusDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createStatusDim(it) }
-                    diseaseDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createDiseaseDim(it) }
-                    serotypeDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createSerotypeDim(it) }
-                    speciesDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createSpeciesDim(it) }
-                    sourceDims.forEachParallel { it.id = EtlLoader.dimensionsDao.createSourceDim(it) }
+                    locationDims.forEachParallel { it.id = dimensionsDao.createLocationDim(it) }
+                    observationDateDims.forEachParallel { it.id = dimensionsDao.createObservationDateDim(it) }
+                    reportingDateDims.forEachParallel { it.id = dimensionsDao.createReportingDateDim(it) }
+                    statusDims.forEachParallel { it.id = dimensionsDao.createStatusDim(it) }
+                    diseaseDims.forEachParallel { it.id = dimensionsDao.createDiseaseDim(it) }
+                    serotypeDims.forEachParallel { it.id = dimensionsDao.createSerotypeDim(it) }
+                    speciesDims.forEachParallel { it.id = dimensionsDao.createSpeciesDim(it) }
+                    sourceDims.forEachParallel { it.id = dimensionsDao.createSourceDim(it) }
                 }
             }.also {
                 println("Execution time $it ms")

@@ -28,16 +28,18 @@ object DimensionsStage {
     fun getLocationDim(
         latitude: Double,
         longitude: Double,
-        region: String,
+        continent: String,
         country: String,
+        countryRegion: String,
         localityName: String
     ): LocationDim =
         locationDimMap[latitude to longitude] ?: LocationDim(
             null,
             latitude,
             longitude,
-            region,
+            continent,
             country,
+            countryRegion,
             localityName
         ).also {
             locationDimMap[latitude to longitude] = it
@@ -58,8 +60,19 @@ object DimensionsStage {
             statusDimMap[status] = it
         }
 
-    fun getDiseaseDim(disease: String): DiseaseDim =
-        diseaseDimMap[disease] ?: DiseaseDim(null, disease).also {
+    fun getDiseaseDim(
+        disease: String,
+        type: String,
+        target: String,
+        infectsHumans: String
+    ): DiseaseDim =
+        diseaseDimMap[disease] ?: DiseaseDim(
+            null,
+            disease,
+            type,
+            target,
+            infectsHumans
+        ).also {
             diseaseDimMap[disease] = it
         }
 

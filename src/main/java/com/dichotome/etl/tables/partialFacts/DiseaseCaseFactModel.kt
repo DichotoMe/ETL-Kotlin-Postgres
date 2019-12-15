@@ -1,12 +1,13 @@
 package com.dichotome.etl.tables.partialFacts
 
 
-data class DiseaseFactModel(
+data class DiseaseCaseFactModel(
     val id: String,
     val latitude: String,
     val longitude: String,
-    val region: String,
+    val continent: String,
     val country: String,
+    val countryRegion: String,
     val localityname: String,
     val observationDate: String,
     val reportingDate: String,

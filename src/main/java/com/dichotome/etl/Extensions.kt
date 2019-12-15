@@ -15,7 +15,7 @@ inline fun <T, S> guard(scope: S, riskyTask: S.() -> T) =
     try {
         riskyTask.invoke(scope)
     } catch (e: Exception) {
-        e.printStackTrace()
+        e.printStackTrace(System.out)
         null
     }
 

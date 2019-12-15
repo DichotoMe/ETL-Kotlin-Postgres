@@ -1,0 +1,35 @@
+name,type,target,infects_humans
+Brucellosis (Brucella abortus),bacterial,cattle,yes
+Contagious bovine pleuropneumonia,bacterial,cattle,no
+Classical swine fever,viral,swine,no
+Equine infectious anaemia,viral,horse,no
+Sheep pox and goat pox,viral,cattle,rare
+MERS-CoV,viral,all,yes
+Peste des petits ruminants,viral,cattle,no
+Lumpy skin disease,viral,cattle,no
+Foot and mouth disease,viral,all,yes
+Influenza - Avian,viral,birds,yes
+Influenza - Equine,viral,horses,no
+Glanders,bacterial,horses,yes
+African swine fever,viral,swine,no
+African horse sickness,viral,horses,no
+West Nile Fever,viral,all,yes
+Influenza - Swine,virus,swine,yes
+Bovine spongiform encephalopathy,virus,cows,yes
+Brucellosis (Brucella melitensis),bacterial,cattle,yes
+Bluetongue,viral,cattle,no
+Newcastle disease,viral,birds,yes
+Rift Valley fever,viral,cattle,yes
+Brucellosis (Brucella suis),bacterial,swine,yes
+Porcine reproductive and respiratory syndrome,viral,swine,yes
+Anthrax,bacterial,all,yes
+Rabies,viral,all,yes
+Bovine tuberculosis,bacterial,all,yes
+Botulism,bacterial,all,yes
+Hendra virus,viral,horses,yes
+Pestivirus,viral,cattle,no
+Salmonellosis,bacterial,all,yes
+Strangles,bacterial,horses,yes
+Nipah virus,viral,all,yes
+Akabane virus,viral,all,no
+Fowl cholera,bacterial,birds,no

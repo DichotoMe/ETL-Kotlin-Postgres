@@ -32,6 +32,7 @@ object DataParser {
                     .newFormat(',')
                     .withQuote('"')
                     .withFirstRecordAsHeader()
+                    .withIgnoreSurroundingSpaces()
             )
         } else {
             throw FileNotFoundException("File not found ${source.path}")
@@ -39,15 +40,17 @@ object DataParser {
 
 
     fun parse(
-        diseasesSrc: Source.DiseasesCases,
+        diseaseCasesSrc: Source.DiseasesCases,
         animalsSrc: Source.AnimalsInfo,
-        humansSrc: Source.HumanVictimsInfo
+        humansSrc: Source.HumanVictimsInfo,
+        diseaseInfoSrc: Source.DiseaseInfo
     ): List<Fact> = runBlocking {
-        val diseaseParserDef = async { createParser(diseasesSrc) }
+        val diseaseCasesParserDef = async { createParser(diseaseCasesSrc) }
         val animalsParserDef = async { createParser(animalsSrc) }
         val humanParserDef = async { createParser(humansSrc) }
+        val diseaseInfoParserDef = async { createParser(diseaseInfoSrc) }
 
-        val diseaseModels = diseaseParserDef.await().map {
+        val diseaseModels = diseaseCasesParserDef.await().map {
             DataMapper.diseasesModelMapper(it)
         }.associateBy { it.id }
 
@@ -59,30 +62,39 @@ object DataParser {
             DataMapper.humansModelMapper(it)
         }.associateBy { it.id }
 
-        diseaseModels.keys.filter { id ->
-            animalModels.containsKey(id) && humanModels.containsKey(id)
-        }.mapNotNull { id ->
-            val diseaseItem = diseaseModels[id]!!
-            val animalsItem = animalModels[id]!!
-            val humansItem = humanModels[id]!!
+        val diseaseInfoModels = diseaseInfoParserDef.await().map {
+            DataMapper.diseaseInfoModelMapper(it)
+        }.associateBy { it.name }
+
+        diseaseModels.keys.mapNotNull { id ->
+            val diseaseCasesItem = diseaseModels[id] ?: return@mapNotNull null
+            val animalsItem = animalModels[id] ?: return@mapNotNull null
+            val humansItem = humanModels[id] ?: return@mapNotNull null
+            val diseaseInfoItem = diseaseInfoModels[diseaseCasesItem.disease] ?: return@mapNotNull null
 
             guard(DimensionsStage) {
                 Fact(
                     id.toInt(),
                     getLocationDim(
-                        diseaseItem.latitude.toDouble(),
-                        diseaseItem.longitude.toDouble(),
-                        diseaseItem.region,
-                        diseaseItem.country,
-                        diseaseItem.localityname
+                        diseaseCasesItem.latitude.toDouble(),
+                        diseaseCasesItem.longitude.toDouble(),
+                        diseaseCasesItem.continent,
+                        diseaseCasesItem.country,
+                        diseaseCasesItem.countryRegion,
+                        diseaseCasesItem.localityname
                     ),
-                    getObservationDateDim(DateUtils.validate(diseaseItem.observationDate)),
-                    getReportingDateDim(DateUtils.validate(diseaseItem.reportingDate)),
-                    getStatusDim(diseaseItem.status),
-                    getDiseaseDim(diseaseItem.disease),
-                    getSerotypeDim(diseaseItem.serotype),
-                    getSpeciesDim(diseaseItem.species),
-                    getSourceDim(diseaseItem.source),
+                    getObservationDateDim(DateUtils.validate(diseaseCasesItem.observationDate)),
+                    getReportingDateDim(DateUtils.validate(diseaseCasesItem.reportingDate)),
+                    getStatusDim(diseaseCasesItem.status),
+                    getDiseaseDim(
+                        diseaseCasesItem.disease,
+                        diseaseInfoItem.type,
+                        diseaseInfoItem.target,
+                        diseaseInfoItem.infectsHumans
+                    ),
+                    getSerotypeDim(diseaseCasesItem.serotype),
+                    getSpeciesDim(diseaseCasesItem.species),
+                    getSourceDim(diseaseCasesItem.source),
                     animalsItem.animalsAtRisk.toIntOrZero(),
                     animalsItem.animalsAffected.toIntOrZero(),
                     animalsItem.animalsDeaths.toIntOrZero(),
